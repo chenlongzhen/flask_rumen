@@ -77,8 +77,10 @@
          //$.getJSON('/echarts',
           //   function(result) {
              var result = {{ datas|safe }};
-             console.log("xxx");
-             console.log(result);
+
+             console.debug("xxx");
+             console.debug(result);
+
              //请求成功时执行该函数内容，result即为服务器返回的json对象
              if (result) {
 //              alert(result["data"]);
