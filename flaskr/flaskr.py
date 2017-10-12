@@ -2,7 +2,7 @@ import os
 import sqlite3
 
 from flask import (Flask, request, session, g, redirect, url_for, abort,
-                   render_template, flash, logging, json)
+                   render_template, flash, logging, json, jsonify)
 
 from raven.contrib.flask import Sentry
 
@@ -111,20 +111,25 @@ def logout():
     flash('You were logged out')
     return redirect(url_for('show_entries'))
 
-@app.route('/echart')
+
+@app.route('/echarts',methods=["GET"])
+#@app.route('/echarts')
 def echarts():
     app.logger.debug("in echarts func!")
+
     datas = {
-        "data":[
-            {"name":"allpe","num":100},
-            {"name":"peach","num":123},
-            {"name":"Pear","num":234},
-            {"name":"avocado","num":20},
-            {"name":"cantaloupe","num":1},
-            {"name":"Banana","num":77},
-            {"name":"Grape","num":43},
-            {"name":"apricot","num":0}
-        ]
+    "data":[
+        {"name":"allpe","num":100},
+        {"name":"peach","num":123},
+        {"name":"Pear","num":234},
+        {"name":"avocado","num":20},
+        {"name":"cantaloupe","num":1},
+        {"name":"Banana","num":77},
+        {"name":"Grape","num":43},
+        {"name":"apricot","num":0}
+    ]
     }
-    content = json.dumps(datas)
-    return render_template('echart.html',content=content)
+
+    app.logger.debug(datas)
+    #return jsonify(datas)
+    return render_template("echarts.html", datas= json.dumps(datas))
