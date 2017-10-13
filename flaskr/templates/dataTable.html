@@ -1,0 +1,104 @@
+<html>
+<head>
+    <script type="text/javascript"
+            src="${pageContext.request.contextPath}/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript"
+            src="${pageContext.request.contextPath}/js/jquery.pagination.js"></script>
+</head>
+</html>
+
+<!--https://www.2cto.com/kf/201706/648886.html-->
+<table width="95%" border="0" align="center" cellpadding="0"
+        cellspacing="0" class="table01" id="table01">
+        <tr>
+            <td width="17%" class="td_top">栏目名称</td>
+            <td width="15%" class="td_top">上级栏目名称</td>
+            <td width="44%" class="td_top">栏目描述</td>
+            <td width="12%" class="td_top">删除</td>
+            <td width="12%" class="td_top">修改</td>
+        </tr>
+        <!--创建一个空行 -->
+        <tr id="dynamicCreate">
+            <td class="td07"></td>
+            <td class="td07"></td>
+            <td class="td07"></td>
+            <td class="td07"></td>
+            <td class="td07"></td>
+        </tr>
+</table>
+
+    <!--创建一个分页栏 -->
+<p   id="Pagination"  style="margin-left: 400px" ></p>
+
+<script type="text/javascript">
+                    var totalRows;      // 总记录数
+                    var  pageNumber;// 当前页码
+                    $(function(){
+                        Ajax(0,1,0); // 在页面加载的时候，自动发送ajax 请求，生成数据
+                        //三个参数的含义： index1 ：在分页的时候用到，看url 路径，主要想提交不用的路径，显示不用的数据
+                        // pageNumber 根据不同的页码，显示不用的分页数据
+                        // newsLabelId ： 可以理解为是查询的条件，根据条件在后台筛选分页数据
+                        function Ajax(index1,pageNumber,newsLabelId){
+                        // 修改为ajax 来提交请求
+                        var url ="${pageContext.request.contextPath}/html/json/data"+index1+".json";
+                        $.get(url,
+                                {"pageNumber":pageNumber,
+                                "newsLabelId":newsLabelId}
+                              // 重点代码：----------------------------------------------------
+                                function(data){
+                                    //1,将class=dynamicCreate1清空，清空之前生成的tr，因为不清空会导致再生成新的tr时，原来的tr依然存在
+                                    $(".dynamicCreate1").remove();
+                                    //在数据生成完成后，隐藏了页面上空行的tr，需要显示出来才能使用。
+                                     $("#dynamicCreate").show();
+                                    // 拿到页面上的tr 对象
+                                    var tr = $("#dynamicCreate");
+                                    // 拿到需要遍历的数据
+                                    var newslabledatas =  data.datas;
+                                    //遍历集合 index 是索引，item 是当前的对象
+                                    $.each(newslabledatas, function(index, item){
+                                    //克隆tr，每次遍历都可以产生新的tr，为了创建新的tr
+                                           var clonedTr = tr.clone();
+                                           //拿到新的tr，循环遍历它每一个td元素，并赋值  inner_index 是当前td 的索引
+                                           clonedTr.children("td").each(function(inner_index){
+                                                  //根据索引为每一个td赋值
+                                                        switch(inner_index){
+                                                              case(0):   // 判断是第一个 td ，就为其赋值
+                                                              // item.name 就是当前的 newslabledatas.name
+                                                                 $(this).html(item.name);
+                                                                 break;
+                                                              case(1):
+                                                                  // 由于parent 元素可能为空，需要判断
+                                                                  if (item.parent == null) {
+                                                                       $(this).html("无上级目录");
+                                                                }else{
+                                                                 $(this).html(item.parent.name);
+                                                                }
+                                                                 break;
+                                                             case(2):
+                                                                 $(this).html(item.content);
+                                                                 break;
+                                                             case(3):
+                                                                 $(this).html("删除");
+                                                                 break;
+                                                             case(4):
+                                                                 $(this).html("修改");
+                                                                 break;
+                                                       }//end switch
+                                        });//end children.each
+                                           //把克隆好的tr追加原来的tr后面 ，这样才能看见新的tr
+                                           clonedTr.insertAfter(tr);
+                                        // 将所有新生成的clonedTr ，既克隆出来的 tr 给予 class 属性，详情见   $(".dynamicCreate1").remove();的注释
+                                           clonedTr.attr("class","dynamicCreate1");
+                                        });//end $each
+                                        //隐藏id=clone的tr，因为该tr中的td没有数据，不隐藏起来会在生成的table第一行显示一个空行
+                                        $("#dynamicCreate").hide();
+                                        // 显示整个 table 表格
+                                        $("#table01").show();
+                                       // 下面的两条数据，主要是为 分页做准备的
+                                        totalRows = data.totalRows;   // 总记录数
+                                        pageNumber= data.pageNumber; // 当前页的页码
+                        },"json");
+                        }
+
+                    });
+            </script>

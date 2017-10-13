@@ -134,24 +134,21 @@ def echarts():
     return render_template("kchart.html",datas = json.dumps(datas))
 
 
-@app.route('/kchart2',methods=["POST","GET"])
-#@app.route('/echarts')
-def echarts2():
-    app.logger.debug("in echarts func!")
-    #dateData, histData = getStock()
-    #datas = {
-    #    "stockid":"sz",
-    #    "dateData": dateData,
-    #    "histData": histData
-    #}
-    stockname = '000001'
-    stockData = getStock(stockname)
-    datas = {
-        "stockname" : stockname,
-        "stockData" : stockData
-    }
 
-    app.logger.debug(datas)
+@app.route( "/get_kchart", methods = [ "POST", "GET" ] )
+def test():
+    if request.method == "POST":
+        stockname = request.form.get( "stockId", "null" )
+        stockData = getStock(stockname)
+        datas = {
+            "stockname" : stockname,
+            "stockData" : stockData
+        }
+
+        app.logger.debug(jsonify(datas))
     #return jsonify(datas)
-    #return render_template("k1.html", datas= json.dumps(datas))
-    return render_template("kchart2.html",datas = json.dumps(datas))
+
+        return jsonify(datas)
+    else:
+        return render_template("get_kchart.html")
+

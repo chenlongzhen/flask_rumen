@@ -12,21 +12,17 @@
         <dd><input type="submit" value="Share">
       </dl>
     </form>
-
-<!--
-    <form action="{{ url_for('echarts') }}" method="post" class="add-entry">
-        <dl>
-            <dt>Show echarts:</dt>
-            <dd><input type="submit" value="OK">
-
-        </dl>
-    </form>
-    -->
-
+  <!--
   <a href="kchart">Show kchart</a>
   <a href="kchart2">Show kchart</a>
+  -->
+
+  <ul class="tool" >
+      <li><a href="get_kchart">获取k线图</a></li>
+  </ul>
 
   {% endif %}
+
 
   <ul class="entries">
   {% for entry in entries %}
@@ -35,5 +31,6 @@
     <li><em>Unbelievable.  No entries here so far</em></li>
   {% endfor %}
   </ul>
+
 {% endblock %}
 

@@ -1,3 +1,4 @@
+# coding=utf-8
 import tushare as ts
 import pandas as pd
 #top = ts.top_list('2017-06-12')
@@ -24,4 +25,14 @@ def getStock(name='sh'):
     #histData = stock_data.values.tolist()
     #return dateData,histData
     return stockData.values.tolist()
+
+
+def get_jigouDetail():
+    '''
+    获取机构成交明细
+    :return: 
+    '''
+
+
+    pass
 
