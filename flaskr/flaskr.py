@@ -8,6 +8,8 @@ from raven.contrib.flask import Sentry
 
 
 #sentry = Sentry()
+from stock.stock1 import getStock
+
 
 def create_app():
     app = Flask(__name__)
@@ -111,24 +113,45 @@ def logout():
     return redirect(url_for('show_entries'))
 
 
-@app.route('/echarts',methods=["GET"])
+@app.route('/kchart',methods=["GET"])
 #@app.route('/echarts')
 def echarts():
     app.logger.debug("in echarts func!")
-
+    #dateData, histData = getStock()
+    #datas = {
+    #    "stockid":"sz",
+    #    "dateData": dateData,
+    #    "histData": histData
+    #}
+    stockData = getStock()
     datas = {
-    "data":[
-        {"name":"allpe","num":100},
-        {"name":"peach","num":123},
-        {"name":"Pear","num":234},
-        {"name":"avocado","num":20},
-        {"name":"cantaloupe","num":1},
-        {"name":"Banana","num":77},
-        {"name":"Grape","num":43},
-        {"name":"apricot","num":0}
-    ]
+        "stockData" : stockData
+    }
+
+    #app.logger.debug(datas)
+    #return jsonify(datas)
+    #return render_template("k1.html", datas= json.dumps(datas))
+    return render_template("kchart.html",datas = json.dumps(datas))
+
+
+@app.route('/kchart2',methods=["POST","GET"])
+#@app.route('/echarts')
+def echarts2():
+    app.logger.debug("in echarts func!")
+    #dateData, histData = getStock()
+    #datas = {
+    #    "stockid":"sz",
+    #    "dateData": dateData,
+    #    "histData": histData
+    #}
+    stockname = '000001'
+    stockData = getStock(stockname)
+    datas = {
+        "stockname" : stockname,
+        "stockData" : stockData
     }
 
     app.logger.debug(datas)
     #return jsonify(datas)
-    return render_template("echarts.html", datas= json.dumps(datas))
+    #return render_template("k1.html", datas= json.dumps(datas))
+    return render_template("kchart2.html",datas = json.dumps(datas))
